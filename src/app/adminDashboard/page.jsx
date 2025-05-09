@@ -17,7 +17,7 @@ export default function AdminDashboard() {
         <button onClick={() => router.push('/adminDashboard/loans')}>
           View All Loan Applications
         </button>
-        <button onClick={() => router.push('/adminDashboard/register')}>
+        <button onClick={() => router.push('/adminDashboard/registerCustomer')}>
           Register Customer
         </button>
 

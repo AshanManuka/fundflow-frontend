@@ -1,0 +1,50 @@
+.container {
+    max-width: 600px;
+    margin: 10% auto;
+    padding: 50px;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    box-shadow: 0 2px 8px rgba(83, 77, 77, 0.1);
+    text-align: center;
+  }
+  
+  .title {
+    margin-bottom: 24px;
+    font-size: 1.8rem;
+    color: #1e0125;
+  }
+  
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+  }
+  
+  .inputFl {
+    padding: 10px 14px;
+    border: 1px solid #4faa8f;
+    border-radius: 6px;
+    font-size: 1rem;
+  }
+  
+  .subBtn {
+    background-color: #280147;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: 700;
+  }
+  
+  .subBtn:hover {
+    background-color: #0f0114;
+  }
+  
+  .message {
+    margin-top: 20px;
+    font-weight: 500;
+    color: #28a745;
+  }
+  
