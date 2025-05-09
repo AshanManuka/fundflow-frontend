@@ -1,0 +1,39 @@
+.container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    background-color: #f8f9fa;
+    text-align: center;
+  }
+  
+  .titleBar {
+    font-size: 50px;
+    margin-bottom: 30px;
+    color: #212529;
+  }
+    
+  .buttonGroup {
+    display: flex;
+    gap: 50px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .buttonGroup button {
+    background-color: #23014b;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 20px 50px;
+    font-size: 30px;
+    font-weight: 900;
+    cursor: pointer;
+  }
+  
+  .buttonGroup button:hover {
+    background-color: #19002e;
+  }
+  
