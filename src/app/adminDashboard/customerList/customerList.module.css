@@ -1,0 +1,106 @@
+.container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 16px;
+  }
+  
+  .title {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .card {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 16px;
+    margin-bottom: 16px;
+    color: black;
+    background-color: #f9f9f9;
+  }
+  
+  .card p {
+    margin: 5px 0;
+  }
+  
+  .actions {
+    margin-top: 12px;
+    display: flex;
+    gap: 12px;
+  }
+
+  .svBtn {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    background-color: rgb(3, 68, 68);
+  }
+  
+  .btns {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  
+  .btns:hover {
+    opacity: 0.9;
+  }
+  
+  .delete {
+    background-color: #dc3545;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .inputFl {
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #aaa;
+  }
+
+  .searchBar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  
+  .searchBar input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+  }
+  
+  .searchBar button {
+    padding: 8px 16px;
+    background-color: #67772d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  
+  .searchBar button:hover {
+    opacity: 0.9;
+  }
+  
+  

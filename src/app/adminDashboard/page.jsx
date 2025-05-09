@@ -11,7 +11,7 @@ export default function AdminDashboard() {
       <h1 className={styles.titleBar}>FundFlow Admin Dashboard</h1>
  
       <div className={styles.buttonGroup}>
-        <button onClick={() => router.push('/adminDashboard/customers')}>
+        <button onClick={() => router.push('/adminDashboard/customerList')}>
           View All Customers
         </button>
         <button onClick={() => router.push('/adminDashboard/loans')}>
