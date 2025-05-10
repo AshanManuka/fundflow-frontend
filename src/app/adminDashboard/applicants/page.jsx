@@ -1,79 +1,120 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './applicants.module.css';
-
-const sampleApplicants = [
-  {
-    id: 1,
-    name: 'Alice Johnson',
-    email: 'alice@example.com',
-    nic: '123456789V',
-    income: 50000,
-    score: 700,
-    status: 'Pending',
-    date: '2025-05-01',
-  },
-  {
-    id: 2,
-    name: 'Bob Smith',
-    email: 'bob@example.com',
-    nic: '987654321V',
-    income: 60000,
-    score: 680,
-    status: 'Approved',
-    date: '2025-05-02',
-  },
-  {
-    id: 3,
-    name: 'Charlie Lee',
-    email: 'charlie@example.com',
-    nic: '456789123V',
-    income: 55000,
-    score: 720,
-    status: 'Rejected',
-    date: '2025-05-03',
-  },
-];
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 export default function ApplicantsPage() {
-  const [applicants, setApplicants] = useState(sampleApplicants);
+  const [applicants, setApplicants] = useState([]);
   const [selected, setSelected] = useState(null);
   const [statusFilter, setStatusFilter] = useState('All');
   const [minScoreFilter, setMinScoreFilter] = useState('');
   const [maxScoreFilter, setMaxScoreFilter] = useState('');
 
+  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+
+  const fetchApplicants = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/admin/all-loan', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.data.success) {
+        const transformed = response.data.body.map((a) => ({
+          id: a.id,
+          name: a.name,
+          email: a.email,
+          nic: a.nic,
+          income: a.income,
+          score: a.creditScore,
+          status: a.status,
+          amount: a.loanAmount,
+          installment: a.installment,
+          reason: a.reason,
+          date: new Date(a.requestedDate).toISOString().split('T')[0], // format to yyyy-mm-dd
+        }));
+        setApplicants(transformed);
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Failed to fetch applicants',
+          text: response.data.message || 'Unexpected API response.',
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: error.response?.data?.message || 'Server error while fetching applicants',
+      });
+    }
+  };
+
+  useEffect(() => {
+    fetchApplicants();
+  }, []);
+
   const filteredApplicants = applicants.filter((a) => {
     const statusMatch = statusFilter === 'All' || a.status === statusFilter;
     const minScoreMatch = minScoreFilter === '' || a.score >= Number(minScoreFilter);
-    const maxScoreMatch = maxScoreFilter === '' || a.score >= Number(maxScoreFilter);
+    const maxScoreMatch = maxScoreFilter === '' || a.score <= Number(maxScoreFilter);
     return statusMatch && minScoreMatch && maxScoreMatch;
   });
 
-  const handleAccept = () => {
+
+  const handleAccept = async () => {
     if (!selected) return;
-    const updated = applicants.map((a) =>
-      a.id === selected.id ? { ...a, status: 'Approved' } : a
-    );
-    setApplicants(updated);
-    setSelected({ ...selected, status: 'Approved' });
+  
+    try {
+      const response = await axios.put(
+        `http://localhost:8080/admin/update-status`,
+        {}, // empty body
+        {
+          params: {
+            loanId: selected.id,
+            status: 'ON GOING',
+          },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
+      if (response.data.success) {
+        const updated = applicants.map((a) =>
+          a.id === selected.id ? { ...a, status: 'ON GOING' } : a
+        );
+        setApplicants(updated);
+        setSelected({ ...selected, status: 'ON GOING' });
+      } else {
+        console.error('Failed to update status:', response.data.message);
+      }
+    } catch (error) {
+      console.error('Error updating loan status:', error);
+    }
   };
+  
+  
+  
 
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Loan Applicants</h1>
-  
+
       <div className={styles.filters}>
         <label>
           Status:
           <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
             <option value="All">All</option>
-            <option value="Pending">Pending</option>
-            <option value="Approved">Approved</option>
-            <option value="Rejected">Rejected</option>
+            <option value="ELIGIBLE">Eligible</option>
+            <option value="NOT ELIGIBLE">Not Eligible</option>
+            <option value="ON GOING">ON GOING</option>
           </select>
         </label>
-  
+
         <label>
           Min Credit Score:
           <input
@@ -88,17 +129,14 @@ export default function ApplicantsPage() {
           Max Credit Score:
           <input
             type="number"
-            placeholder="e.g. 700"
+            placeholder="e.g. 750"
             value={maxScoreFilter}
             onChange={(e) => setMaxScoreFilter(e.target.value)}
           />
         </label>
 
-        <button className={styles.filterBtn} onClick={handleAccept}>
-            Filter
-        </button>
       </div>
-  
+
       <div className={styles.content}>
         <div className={styles.leftPanel}>
           <table className={styles.table}>
@@ -122,7 +160,7 @@ export default function ApplicantsPage() {
             </tbody>
           </table>
         </div>
-  
+
         <div className={styles.rightPanel}>
           {selected ? (
             <div className={styles.details}>
@@ -133,8 +171,11 @@ export default function ApplicantsPage() {
               <p className={styles.detailP}><strong>Income:</strong> Rs. {selected.income}</p>
               <p className={styles.detailP}><strong>Credit Score:</strong> {selected.score}</p>
               <p className={styles.detailP}><strong>Status:</strong> {selected.status}</p>
+              <p className={styles.detailP}><strong>Amount:</strong> Rs. {selected.amount}</p>
+              <p className={styles.detailP}><strong>Installment:</strong> {selected.installment}</p>
+              <p className={styles.detailP}><strong>Reason:</strong> {selected.reason}</p>
               <p className={styles.detailP}><strong>Applied On:</strong> {selected.date}</p>
-              {selected.status === 'Pending' && (
+              {selected.status === 'ELIGIBLE' && (
                 <button className={styles.acceptBtn} onClick={handleAccept}>
                   Accept Loan
                 </button>
@@ -149,5 +190,4 @@ export default function ApplicantsPage() {
       </div>
     </div>
   );
-  
 }
