@@ -77,11 +77,64 @@ export default function CustomersPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleUpdate = (e) => {
+  const handleUpdate = async (e) => {
     e.preventDefault();
-    setCustomers(customers.map((c) => (c.id === editingId ? { ...form, id: editingId } : c)));
-    setEditingId(null);
+  
+    const token = localStorage.getItem('token');
+    if (!token) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Unauthorized',
+        text: 'Token missing. Please log in again.',
+      });
+      return;
+    }
+  
+    try {
+      const response = await axios.put(
+        `http://localhost:8080/admin/update-customer?cusId=${editingId}`,
+        {
+          name: form.name,
+          nic: form.nic,
+          email: form.email,
+          income: form.income,
+          creditScore: form.score, // Map frontend score to backend's expected 'creditScore'
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+  
+      if (response.data.success) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Customer Updated',
+          timer: 1500,
+          showConfirmButton: false,
+        });
+  
+        // Update customer list
+        setCustomers(customers.map((c) => (c.id === editingId ? { ...form, id: editingId } : c)));
+        setEditingId(null);
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Update Failed',
+          text: response.data.message || 'Unknown error',
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: error.response?.data?.message || 'Server error during update',
+      });
+    }
   };
+  
 
   const handleSearch = async () => {
     try {
