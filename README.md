@@ -1,36 +1,31 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FundFlow Application (FrontEnd)
 
-## Getting Started
+A Loan Management System backend developed with Spring Boot and Log4j2 for logging.
 
-First, run the development server:
+##  Setup Instructions
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/AshanManuka/fundflow-frontend.git
+   cd fundFlow-frontend
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+2. Install Packages
+     ```bash
+   npm install
+   
+4. Run the Application (Front-End)
+   ```bash
+   npm run dev
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Admin Login
+  ```bash
+   UserName : adminTwo
+   Password : adminTwo
 
-## Learn More
+- Customer Login
+  ```bash
+   UserName : pathum@mail.com
+   Password : pathum@mail.com
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+   
