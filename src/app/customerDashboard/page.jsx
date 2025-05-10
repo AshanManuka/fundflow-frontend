@@ -6,13 +6,6 @@ import styles from './customerDashboard.module.css';
 export default function CustomerDashboard() {
   const router = useRouter();
 
-  const handleRequestLoan = () => {
-    router.push('/loan-request');
-  };
-
-  const handleViewHistory = () => {
-    router.push('/loan-history');
-  };
 
   const handleLogout = () => {
     console.log('User logged out');
@@ -28,7 +21,7 @@ export default function CustomerDashboard() {
       <h1 className={styles.title}>Welcome to FundFlow</h1>
       <div className={styles.buttonGroup}>
         <button className={styles.btns} onClick={() => router.push('/customerDashboard/requestLoan')}>Request a Loan</button>
-        <button className={styles.btns} onClick={handleViewHistory}>View Loan History</button>
+        <button className={styles.btns} onClick={() => router.push('/customerDashboard/loanHistory')}>View Loan History</button>
       </div>
     </div>
   );
