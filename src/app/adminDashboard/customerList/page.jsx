@@ -63,9 +63,27 @@ export default function CustomersPage() {
     fetchCustomers();
   }, []);
 
-  const handleDelete = (id) => {
-    setCustomers(customers.filter((c) => c.id !== id));
-    if (editingId === id) setEditingId(null);
+  const handleDelete = async (id) => {
+    alert(id);
+    try {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+  
+      const response = await axios.delete(`http://localhost:8080/admin/delete-customer`, {
+        params: { customerId: id },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      if (response.status === 200) {
+        setCustomers(customers.filter((c) => c.id !== id));
+        if (editingId === id) setEditingId(null);
+      } else {
+        console.error('Delete failed:', response.data.message);
+      }
+    } catch (error) {
+      console.error('Error deleting customer:', error.response?.data?.message || error.message);
+    }
   };
 
   const handleEdit = (customer) => {
