@@ -1,0 +1,67 @@
+.container {
+    max-width: 500px;
+    margin: 10% auto;
+    padding: 24px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    color: black;
+  }
+  
+  .title {
+    font-size: 24px;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .lbl {
+    font-weight: 700;
+    display: flex;
+    flex-direction: column;
+    font-size: 16px;
+  }
+  
+  .inps {
+    margin-top: 4px;
+    padding: 8px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+
+  }
+
+  .txtarea {
+    margin-top: 4px;
+    padding: 8px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
+  
+  .btns {
+    background-color: #027536;
+    color: white;
+    font-weight: 700;
+    padding: 12px;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  
+  .btns:hover {
+    background-color: #005bd1;
+  }
+  
+  .message {
+    margin-top: 12px;
+    color: green;
+    text-align: center;
+  }
+  
