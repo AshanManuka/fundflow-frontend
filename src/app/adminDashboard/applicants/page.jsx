@@ -65,14 +65,7 @@ export default function ApplicantsPage() {
   });
 
   const handleCustomerHistory = async () => {
-    // if (!selected || !selected.customerId) {
-    //   console.warn("No customer selected or missing customerId.");
-    //   return;
-    // }
-  
-    // console.log("Token used for request:", token);
-    // console.log("Customer ID used:", selected.customerId);
-  
+    
     try {
       const response = await axios.get('http://localhost:8080/admin/single-customer-loan', {
         params: {
