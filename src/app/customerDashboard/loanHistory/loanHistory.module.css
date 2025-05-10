@@ -30,18 +30,19 @@
     font-weight: 600;
   }
   
-  .approved {
+  .ongoing {
     color: green;
     font-weight: 500;
   }
   
-  .pending {
+  .eligible {
     color: orange;
     font-weight: 500;
   }
   
-  .rejected {
+  .noteligible {
     color: red;
     font-weight: 500;
   }
+
   

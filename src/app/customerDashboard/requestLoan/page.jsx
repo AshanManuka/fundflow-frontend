@@ -1,7 +1,9 @@
 'use client';
 
 import { useState } from 'react';
+import axios from 'axios';
 import styles from './loanRequest.module.css';
+import Swal from 'sweetalert2'; // Optional if you want SweetAlert
 
 export default function LoanRequestForm() {
   const [loanAmount, setLoanAmount] = useState('');
@@ -9,20 +11,53 @@ export default function LoanRequestForm() {
   const [purpose, setPurpose] = useState('');
   const [message, setMessage] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Placeholder for API call
-    console.log({
-      loanAmount,
-      duration,
-      purpose,
-    });
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
 
-    setMessage('Loan request submitted successfully.');
-    setLoanAmount('');
-    setDuration('');
-    setPurpose('');
+    try {
+      const response = await axios.post(
+        'http://localhost:8080/customer/request-loan',
+        {
+          amount: Number(loanAmount),
+          installment: Number(duration),
+          reason: purpose,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200 || response.status === 201) {
+
+        await Swal.fire({
+                icon: 'success',
+                title: 'Your loan request has been submitted successfully.',
+                showConfirmButton: false,
+                timer: 1500,
+              });
+
+        setLoanAmount('');
+        setDuration('');
+        setPurpose('');
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Submission Failed',
+          text: response.data.message || 'Something went wrong.',
+        });
+      }
+    } catch (err) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: err.response?.data?.message || 'Failed to submit loan request.',
+      });
+    }
   };
 
   return (
