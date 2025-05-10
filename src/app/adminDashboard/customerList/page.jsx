@@ -1,19 +1,67 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './customerList.module.css';
-
-const initialCustomers = [
-  { id: 1, name: 'Alice Johnson', nic: '123456789V', email: 'alice@example.com', income: 50000, score: 700 },
-  { id: 2, name: 'Bob Smith', nic: '987654321V', email: 'bob@example.com', income: 60000, score: 680 },
-  { id: 3, name: 'Charlie Lee', nic: '456789123V', email: 'charlie@example.com', income: 55000, score: 720 },
-];
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 export default function CustomersPage() {
-  const [customers, setCustomers] = useState(initialCustomers);
+  const [customers, setCustomers] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState({ name: '', nic: '', email: '', income: '', score: '' });
   const [searchKeyword, setSearchKeyword] = useState('');
+
+  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+
+  const fetchCustomers = async (keyword = '') => {
+    if (!token) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Unauthorized',
+        text: 'Token missing. Please log in again.',
+      });
+      return;
+    }
+
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/admin/all-customer${keyword ? `?keyword=${keyword}` : ''}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.data.success && Array.isArray(response.data.body)) {
+        const transformed = response.data.body.map((c) => ({
+          id: c.id,
+          name: c.name,
+          nic: c.nic,
+          email: c.email,
+          income: c.income,
+          score: c.creditScore,
+        }));
+        setCustomers(transformed);
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Failed to fetch customers',
+          text: response.data.message || 'Unexpected API response.',
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: error.response?.data?.message || 'Server error while fetching customers',
+      });
+    }
+  };
+
+  useEffect(() => {
+    fetchCustomers();
+  }, []);
 
   const handleDelete = (id) => {
     setCustomers(customers.filter((c) => c.id !== id));
@@ -36,23 +84,35 @@ export default function CustomersPage() {
   };
 
   const handleSearch = async () => {
-    // Simulate backend request (you'll replace this with actual API call)
-    console.log('Searching for:', searchKeyword);
-
-    // Example: backend fetch
-    // const res = await fetch(`/api/customers?keyword=${searchKeyword}`);
-    // const data = await res.json();
-    // setCustomers(data);
-
-    // For now, filter the local data (mock)
-    const filtered = initialCustomers.filter(
-      (c) =>
-        c.name.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-        c.nic.includes(searchKeyword) ||
-        c.email.toLowerCase().includes(searchKeyword.toLowerCase())
-    );
-    setCustomers(filtered);
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get(
+        `http://localhost:8080/admin/search-customer?cusKeyword=${searchKeyword}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
+      if (response.data.success && Array.isArray(response.data.body)) {
+        const transformed = response.data.body.map((c) => ({
+          id: c.id,
+          name: c.name,
+          nic: c.nic,
+          email: c.email,
+          income: c.income,
+          score: c.creditScore,
+        }));
+        setCustomers(transformed);
+      } else {
+        console.log('No customers found');
+      }
+    } catch (error) {
+      console.error('Error during search:', error);
+    }
   };
+  
 
   return (
     <div className={styles.container}>
