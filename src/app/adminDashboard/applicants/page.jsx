@@ -34,7 +34,7 @@ export default function ApplicantsPage() {
           amount: a.loanAmount,
           installment: a.installment,
           reason: a.reason,
-          date: new Date(a.requestedDate).toISOString().split('T')[0], // format to yyyy-mm-dd
+          date: new Date(a.requestedDate).toISOString().split('T')[0],
         }));
         setApplicants(transformed);
       } else {
@@ -64,6 +64,49 @@ export default function ApplicantsPage() {
     return statusMatch && minScoreMatch && maxScoreMatch;
   });
 
+  const handleCustomerHistory = async () => {
+    // if (!selected || !selected.customerId) {
+    //   console.warn("No customer selected or missing customerId.");
+    //   return;
+    // }
+  
+    // console.log("Token used for request:", token);
+    // console.log("Customer ID used:", selected.customerId);
+  
+    try {
+      const response = await axios.get('http://localhost:8080/admin/single-customer-loan', {
+        params: {
+          loanId: selected.id,
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      if (response.data.success) {
+        const transformed = response.data.body.map((a) => ({
+          id: a.id,
+          name: a.name,
+          email: a.email,
+          nic: a.nic,
+          income: a.income,
+          score: a.creditScore,
+          status: a.status,
+          amount: a.loanAmount,
+          installment: a.installment,
+          reason: a.reason,
+          date: new Date(a.requestedDate).toISOString().split('T')[0],
+        }));
+        setApplicants(transformed);
+      } else {
+        console.error('Failed to fetch loan history:', response.data.message);
+      }
+    } catch (error) {
+      console.error('Error fetching customer loan history:', error);
+    }
+  };
+     
+
 
   const handleAccept = async () => {
     if (!selected) return;
@@ -71,7 +114,7 @@ export default function ApplicantsPage() {
     try {
       const response = await axios.put(
         `http://localhost:8080/admin/update-status`,
-        {}, // empty body
+        {}, 
         {
           params: {
             loanId: selected.id,
@@ -175,11 +218,15 @@ export default function ApplicantsPage() {
               <p className={styles.detailP}><strong>Installment:</strong> {selected.installment}</p>
               <p className={styles.detailP}><strong>Reason:</strong> {selected.reason}</p>
               <p className={styles.detailP}><strong>Applied On:</strong> {selected.date}</p>
+              
               {selected.status === 'ELIGIBLE' && (
                 <button className={styles.acceptBtn} onClick={handleAccept}>
                   Accept Loan
                 </button>
               )}
+              <button className={styles.cusBtn} onClick={handleCustomerHistory}>
+                  Customer Loan History
+                </button>
             </div>
           ) : (
             <div className={styles.detailsPlaceholder}>
